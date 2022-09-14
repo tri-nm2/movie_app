@@ -60,18 +60,18 @@ function Detail() {
         >
           {cinemasSystem.cumRapChieu.map((cinemas, index) => {
             return (
-              <div key={index} className="flex flex-wrap mb-5">
+              <div key={index} className="grid grid-cols-10 mb-5">
                 <img
                   className="w-10 h-16 rounded-md"
                   src={cinemas.hinhAnh}
                   alt="error"
                 ></img>
-                <div className="flex flex-col font-semibold ml-3">
+                <div className="col-start-2 col-span-9 font-semibold ml-3">
                   <p className="text-lime-500">{cinemas.tenCumRap}</p>
                   <p className="text-gray-400">{cinemas.diaChi}</p>
                 </div>
                 
-                <div className="grid grid-cols-10 gap-2 mt-2 pr-2">
+                <div className="col-span-full grid grid-cols-10 gap-2 mt-2 pr-2">
                   {cinemas.lichChieuPhim.map((schedule, index) => {
                     return (
                       <button
