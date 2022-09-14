@@ -5,6 +5,12 @@ import moment from "moment/moment";
 function CinemasList(props) {
   const { TabPane } = Tabs;
 
+  //Events
+  const handleScheduleClick = (scheduleId) => {
+    console.log(scheduleId);
+  };
+  //Events
+
   return (
     <div className="container mx-auto" style={{ width: 1000 }}>
       <Tabs defaultActiveKey="1" tabPosition="left">
@@ -49,7 +55,10 @@ function CinemasList(props) {
                     >
                       {cinemas.danhSachPhim.slice(0, 10).map((movie, index) => {
                         return (
-                          <div key={index} className="flex flex-row justify-between mb-10">
+                          <div
+                            key={index}
+                            className="flex flex-row justify-between mb-10"
+                          >
                             <div className="w-20 h-20">
                               <img
                                 className="w-full h-full"
@@ -62,11 +71,17 @@ function CinemasList(props) {
                               <div className="grid grid-cols-6 gap-4">
                                 {movie.lstLichChieuTheoPhim
                                   ?.slice(0, 10)
-                                  .map((schedule) => {
+                                  .map((schedule, index) => {
                                     return (
                                       <button
+                                        key={index}
                                         className="px-2 py-1 border rounded 
                                         hover:bg-blue-600 hover:text-white"
+                                        onClick={() => {
+                                          handleScheduleClick(
+                                            schedule.maLichChieu
+                                          );
+                                        }}
                                       >
                                         {moment(
                                           schedule.ngayChieuGioChieu

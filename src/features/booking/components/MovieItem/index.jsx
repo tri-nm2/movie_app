@@ -1,6 +1,16 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 
 function MovieItem(props) {
+  const history = useHistory();
+
+  //Events
+  const handleDetailClick = (movieId) => {
+    const path = `/Detail/${movieId}`;
+    history.push(path);
+  };
+  //Events
+
   return (
     <div>
       <div className="rounded-md shadow-md bg-gray-50 text-gray-800 w-full">
@@ -18,6 +28,9 @@ function MovieItem(props) {
           <button
             type="button"
             className="flex items-center justify-center w-full p-3 font-semibold tracking-wide rounded-md bg-violet-600 text-gray-50"
+            onClick={() => {
+              handleDetailClick(props.movie.maPhim);
+            }}
           >
             Chi tiết
           </button>
