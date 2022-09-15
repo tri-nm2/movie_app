@@ -5,6 +5,9 @@ import { groupId } from "common/contants/myContant";
 import { instance } from "api/instance";
 import { Pagination } from "antd";
 import CinemasList from "features/booking/components/CinemasList";
+import CinemasListMobile from "features/booking/components/CinemaListMobile";
+import { useWindowSize } from "common/hooks/windowSize";
+import { mobileBreakPoint } from "common/contants/myContant";
 
 function Home() {
   const [movieList, setMovieList] = useState([]);
@@ -15,6 +18,7 @@ function Home() {
     pageSize: 8,
     totalData: 0,
   });
+  const windowSize = useWindowSize();
 
   //Hooks
   useEffect(() => {
@@ -75,7 +79,6 @@ function Home() {
         },
       });
 
-      console.log(response.data.content);
       setCinemasList(response.data.content);
     } catch (error) {
       console.log(error.response.data.content);
@@ -95,14 +98,18 @@ function Home() {
       <MovieList movieList={movieList} />
       <div className="text-center mt-5">
         <Pagination
-        className="mb-20"
+          className="mb-20"
           defaultCurrent={paginationConfig.currentPage}
           pageSize={paginationConfig.pageSize}
           total={paginationConfig.totalData}
           onChange={handlePageChange}
         />
       </div>
-      <CinemasList cinemasList={cinemasList} />
+      {windowSize.width > mobileBreakPoint ? (
+        <CinemasList cinemasList={cinemasList} />
+      ) : (
+        <CinemasListMobile cinemasList={cinemasList} />
+      )}
     </div>
   );
 }
