@@ -159,6 +159,24 @@ function Detail() {
 
     return tag;
   };
+
+  const renderTrailer = () => {
+    // console.log(trailer.includes("https://"));
+    if (movieInfo.trailer?.includes("https://")) {
+      return (
+        <iframe
+          style={{ width: "100%", height: "100%" }}
+          src={movieInfo.trailer}
+          title="Thương Tuyết - Vương Vận (Remix)"
+          frameBorder={0}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      );
+    } else {
+      return <></>;
+    }
+  };
   //Other function
 
   return (
@@ -264,6 +282,19 @@ function Detail() {
                 <p className="font-bold">Nội dung</p>
                 <p className="lg:text-base text-lg">{movieInfo.moTa}</p>
               </div>
+            </div>
+          </TabPane>
+
+          <TabPane tab="Trailer" key="3">
+            <div
+              className="mx-auto lg:w-full"
+              style={
+                windowSize.width > mobileBreakPoint
+                  ? { height: 400 }
+                  : { height: 300 }
+              }
+            >
+              {renderTrailer()}
             </div>
           </TabPane>
         </Tabs>
