@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { instance } from "api/instance";
 import { CustomCard } from "@tsamantanis/react-glassmorphism";
 import { Rate, Tabs, Collapse } from "antd";
@@ -22,6 +22,10 @@ function Detail() {
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
   };
+
+  const history = useHistory();
+
+   
 
   //Hooks
   useEffect(() => {
@@ -47,7 +51,7 @@ function Detail() {
     }
   };
   //Api function
-
+  
   //Other function
   const renderSchedule = () => {
     const tag = movieInfo.heThongRapChieu?.map((cinemasSystem, index) => {
@@ -82,9 +86,9 @@ function Detail() {
                         key={index}
                         className="px-2 py-1 border rounded 
                         hover:bg-blue-600 hover:text-white"
-                        // onClick={() => {
-                        //   handleScheduleClick(schedule.maLichChieu);
-                        // }}
+                        onClick={() => {
+                          handleScheduleClick(schedule.maLichChieu);
+                        }}
                       >
                         {moment(schedule.ngayChieuGioChieu).format("HH:mm")}
                       </button>
@@ -140,9 +144,9 @@ function Detail() {
                           key={index}
                           className="px-2 py-1 border rounded 
                       hover:bg-blue-600 hover:text-white"
-                          // onClick={() => {
-                          //   handleScheduleClick(schedule.maLichChieu);
-                          // }}
+                          onClick={() => {
+                            handleScheduleClick(schedule.maLichChieu);
+                          }}
                         >
                           {moment(schedule.ngayChieuGioChieu).format("HH:mm")}
                         </button>
@@ -177,6 +181,11 @@ function Detail() {
       return <></>;
     }
   };
+  const handleScheduleClick = (maLichChieu) => {
+    console.log(maLichChieu);
+    const path = `/Checkout/${maLichChieu}`;
+    history.push(path);
+  }
   //Other function
 
   return (
