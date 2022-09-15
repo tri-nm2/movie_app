@@ -278,8 +278,8 @@ function Detail() {
                 </div>
               </div>
 
-              <div className="col-span-4">
-                <p className="font-bold">Nội dung</p>
+              <div className="lg:col-span-4 col-span-full lg:mt-0 mt-5">
+                <p className="font-bold lg:mb-0 mb-2">Nội dung</p>
                 <p className="lg:text-base text-lg">{movieInfo.moTa}</p>
               </div>
             </div>
