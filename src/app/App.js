@@ -3,10 +3,12 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React, { Suspense } from "react";
 import MovieHeader from "common/components/MovieHeader";
 import MovieFooter from "common/components/MovieFooter";
+import BackToTop from "common/components/BackToTop";
 
 function App() {
   const Home = React.lazy(() => import("features/booking/pages/Home"));
   const Detail = React.lazy(() => import("features/booking/pages/Detail"));
+  //const scrollPosition = useScrollPosition();
   return (
     <Router>
       <div>
@@ -23,6 +25,7 @@ function App() {
           </Switch>
         </Suspense>
         <MovieFooter />
+        <BackToTop />
       </div>
     </Router>
   );
