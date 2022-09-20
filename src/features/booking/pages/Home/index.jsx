@@ -8,6 +8,7 @@ import CinemasList from "features/booking/components/CinemasList";
 import CinemasListMobile from "features/booking/components/CinemaListMobile";
 import { useWindowSize } from "common/hooks/windowSize";
 import { mobileBreakPoint } from "common/contants/myContant";
+import { useLocation } from "react-router-dom";
 
 function Home() {
   const [movieList, setMovieList] = useState([]);
@@ -19,6 +20,7 @@ function Home() {
     totalData: 0,
   });
   const windowSize = useWindowSize();
+  const location = useLocation();
 
   //Hooks
   useEffect(() => {
@@ -31,6 +33,19 @@ function Home() {
     fetchMovieList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationConfig.currentPage]);
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      const target = document.getElementById(hash.substring(1));
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    return () => window.scroll({ top: 0, left: 0, behavior: "smooth" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.hash, location.key]);
   //Hooks
 
   //Api function
@@ -95,21 +110,25 @@ function Home() {
   return (
     <div>
       <MovieCarousel banner={banner} />
-      <MovieList movieList={movieList} />
-      <div className="text-center mt-5">
-        <Pagination
-          className="mb-20"
-          defaultCurrent={paginationConfig.currentPage}
-          pageSize={paginationConfig.pageSize}
-          total={paginationConfig.totalData}
-          onChange={handlePageChange}
-        />
+      <div id="movieListTag">
+        <MovieList movieList={movieList} />
+        <div className="text-center mt-5">
+          <Pagination
+            className="mb-20"
+            defaultCurrent={paginationConfig.currentPage}
+            pageSize={paginationConfig.pageSize}
+            total={paginationConfig.totalData}
+            onChange={handlePageChange}
+          />
+        </div>
       </div>
-      {windowSize.width > mobileBreakPoint ? (
-        <CinemasList cinemasList={cinemasList} />
-      ) : (
-        <CinemasListMobile cinemasList={cinemasList} />
-      )}
+      <div id="cinemasListTag">
+        {windowSize.width > mobileBreakPoint ? (
+          <CinemasList cinemasList={cinemasList} />
+        ) : (
+          <CinemasListMobile cinemasList={cinemasList} />
+        )}
+      </div>
     </div>
   );
 }

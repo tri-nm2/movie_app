@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import logo from "assets/images/headTixLogo.png";
 import { Drawer } from "antd";
 import { UserOutlined } from "@ant-design/icons";
@@ -24,31 +24,29 @@ function MovieHeader() {
 
   return (
     <div>
-      <header className="p-1 bg-stone-50 text-black w-full z-50">
+      <header className="p-1 text-black w-full z-50 bg-stone-50">
         <div className="container flex justify-between h-16 mx-auto">
           <NavLink to="/" className="flex items-center p-2">
             <img className="w-14 h-14" src={logo} alt="logo"></img>
           </NavLink>
           <ul className="items-stretch space-x-3 hidden md:flex">
             <li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="/#"
+              <Link
+                to={{ pathname: "/", hash: "#movieListTag" }}
                 className="flex items-center px-4 -mb-1 border-b-2 border-transparent 
                 hover:text-red-600 font-semibold"
               >
                 Lịch chiếu
-              </a>
+              </Link>
             </li>
             <li className="flex">
-              <a
-                rel="noopener noreferrer"
-                href="/#"
+              <Link
+                to={{ pathname: "/", hash: "#cinemasListTag" }}
                 className="flex items-center px-4 -mb-1 border-b-2 border-transparent 
                 hover:text-red-600 font-semibold"
               >
                 Cụm rạp
-              </a>
+              </Link>
             </li>
           </ul>
           <div className="items-center flex-shrink-0 hidden md:flex">
@@ -97,10 +95,16 @@ function MovieHeader() {
         }}
       >
         <div className="flex flex-col space-y-4">
-          <NavLink className="text-black text-lg" to="/">
+          <NavLink
+            className="text-black text-lg"
+            to={{ pathname: "/", hash: "#movieListTag" }}
+          >
             Lịch chiếu
           </NavLink>
-          <NavLink className="text-black text-lg" to="/">
+          <NavLink
+            className="text-black text-lg"
+            to={{ pathname: "/", hash: "#cinemasListTag" }}
+          >
             Cụm rạp
           </NavLink>
           <NavLink className="text-black text-lg" to="/">
