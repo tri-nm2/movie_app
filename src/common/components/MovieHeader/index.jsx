@@ -1,12 +1,41 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+
+import React, { Fragment, useState } from "react";
+import { NavLink, useHistory, Link } from "react-router-dom";
 import logo from "assets/images/headTixLogo.png";
 import { Drawer } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { TOOKEN, USER_LOGIN } from "common/contants/myContant";
+import { DELETE_THONG_TIN_USER } from "redux/actions/types/QuanLyNguoiDungType";
+import { HIDE_LOADING } from "redux/actions/types/LoadingType";
+import { LayThongTinNguoiDungAction } from "redux/actions/QuanLyNguoiDungAction";
+import { LoadingHideAction } from "redux/actions/LoadingAction";
 
 function MovieHeader() {
   const [open, setOpen] = useState(false);
+  const { userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const renderNutDangXuat = () => {
+    return <NavLink
+          className="
+               hover:text-red-600 text-black text-lg"
+          to="/" onClick={() => {
+            dispatch({
+              type: DELETE_THONG_TIN_USER,
+            })
+            localStorage.removeItem(USER_LOGIN);
+            localStorage.removeItem(TOOKEN);
 
+            // window.location.reload();
+            dispatch(LoadingHideAction());
+     
+          }}
+        >
+          Đăng xuất
+        </NavLink>
+  }
   const renderDrawerTitle = () => {
     return (
       <div className="flex flex-nowrap justify-center items-center space-x-2">
@@ -14,14 +43,87 @@ function MovieHeader() {
           <UserOutlined className="text-white" style={{ fontSize: 30 }} />
         </div>
         <div>
-          <NavLink className="text-gray-500 text-xl" to="/">
+        {!_.isEmpty(userLogin) ? (<div className="flex-col"><div><NavLink className="text-gray-500 text-xl" to="/Thongtintaikhoan">
+            {userLogin.taiKhoan}
+          </NavLink></div></div>)
+          :(<NavLink className="text-gray-500 text-xl" to="/Signin">
             Đăng nhập
-          </NavLink>
+          </NavLink>) }
+          
         </div>
       </div>
     );
   };
+  // in ra giao diện đăng nhập hoặc đăng xuất khi người dùng  có đăng nhập hoặc không
+  const renderLogin = () => {
+    if (_.isEmpty(userLogin)) {
+      return (
+        <Fragment>
+          <NavLink
+            className="self-center px-5 py-3 mr-2 font-semibold border rounded 
+              hover:bg-violet-600 hover:text-white"
+            to="/Signin"
+          >
+            Đăng nhập
+          </NavLink>
 
+          {/* <button
+              className="self-center px-5 py-3 mr-2 font-semibold border rounded 
+              hover:bg-violet-600 hover:text-white"
+            >
+              Đăng nhập
+            </button> */}
+          <NavLink
+            className="self-center px-5 py-3 font-semibold border rounded
+              hover:bg-violet-600 hover:text-white"
+            to="/Signup"
+          >
+            Đăng ký
+          </NavLink>
+          {/* <button
+              className="self-center px-5 py-3 font-semibold border rounded
+              hover:bg-violet-600 hover:text-white"
+            >
+              Đăng ký
+            </button> */}
+        </Fragment>
+      );
+    }
+    return (
+      <Fragment>
+        <NavLink
+          className="self-center px-5 py-3 mr-2 ml-2 font-semibold border rounded 
+              hover:bg-violet-600 hover:text-white"
+          to="/Thongtintaikhoan"
+          onClick={() => {
+           
+          }}
+        >
+          <div className="">
+            <UserOutlined /> {userLogin.taiKhoan}
+          </div>
+        </NavLink>
+        <NavLink
+          className="self-center px-5 py-3 mr-2 font-semibold border rounded 
+              hover:bg-violet-600 hover:text-white"
+          to="/" onClick={() => {
+            dispatch({
+              type: DELETE_THONG_TIN_USER,
+            })
+            localStorage.removeItem(USER_LOGIN);
+            localStorage.removeItem(TOOKEN);
+
+            // window.location.reload();
+            dispatch(LoadingHideAction());
+     
+          }}
+        >
+          Đăng xuất
+        </NavLink>
+      </Fragment>
+    );
+   
+  };
   return (
     <div>
       <header className="p-1 text-black w-full z-50 bg-stone-50">
@@ -50,18 +152,7 @@ function MovieHeader() {
             </li>
           </ul>
           <div className="items-center flex-shrink-0 hidden md:flex">
-            <button
-              className="self-center px-5 py-3 mr-2 font-semibold border rounded 
-              hover:bg-violet-600 hover:text-white"
-            >
-              Đăng nhập
-            </button>
-            <button
-              className="self-center px-5 py-3 font-semibold border rounded
-              hover:bg-violet-600 hover:text-white"
-            >
-              Đăng ký
-            </button>
+            {renderLogin()}
           </div>
           <button className="p-4 md:hidden">
             <svg
@@ -107,9 +198,8 @@ function MovieHeader() {
           >
             Cụm rạp
           </NavLink>
-          <NavLink className="text-black text-lg" to="/">
-            Đăng ký
-          </NavLink>
+          {!_.isEmpty(userLogin) ? <Fragment>{renderNutDangXuat()}</Fragment> :<NavLink className="text-black text-lg" to="/Signup">Đăng ký</NavLink> }
+          
         </div>
       </Drawer>
     </div>

@@ -9,6 +9,8 @@ import CinemasListMobile from "features/booking/components/CinemaListMobile";
 import { useWindowSize } from "common/hooks/windowSize";
 import { mobileBreakPoint } from "common/contants/myContant";
 import { useLocation } from "react-router-dom";
+import { CHUYEN_TAB_ACTIVE } from "redux/actions/types/QuanLyPhongVeType";
+import { useDispatch } from "react-redux";
 
 function Home() {
   const [movieList, setMovieList] = useState([]);
@@ -22,8 +24,13 @@ function Home() {
   const windowSize = useWindowSize();
   const location = useLocation();
 
+  const dispatch = useDispatch();
   //Hooks
   useEffect(() => {
+    dispatch({
+      type: CHUYEN_TAB_ACTIVE,
+    });
+    console.log("home useeffet");
     fetchBanner();
     fetchCinemasList();
     // eslint-disable-next-line react-hooks/exhaustive-deps

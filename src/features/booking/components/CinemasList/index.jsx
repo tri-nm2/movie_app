@@ -1,13 +1,14 @@
 import React from "react";
 import { Tabs } from "antd";
 import moment from "moment/moment";
+import { useHistory } from "react-router-dom";
 
 function CinemasList(props) {
   const { TabPane } = Tabs;
-
+  const history = useHistory();
   //Events
   const handleScheduleClick = (scheduleId) => {
-    console.log(scheduleId);
+    history.push(`/checkout/${scheduleId}`); 
   };
   //Events
 
