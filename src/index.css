@@ -18,3 +18,53 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.login_img_section {
+  background: linear-gradient(rgba(2,2,2,.7),rgba(0,0,0,.7)),url(https://movienew.cybersoft.edu.vn/hinhanh/ban-tay-diet-quy.png) center center;
+  background-size: cover;
+}
+.signup_img_section {
+  background: linear-gradient(rgba(2,2,2,.7),rgba(0,0,0,.7)),url(https://movienew.cybersoft.edu.vn/hinhanh/lat-mat-48h.png) center center;
+  background-size: cover;
+}
+.ghe{ /*ghế thường */
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgb(123,122,122);
+  color: #fff;
+}
+.gheDadat{ /*ghế đã đặt */
+  cursor: no-drop;
+  background-color: rgb(233, 27, 27);
+}
+.gheDangDat{ /*ghế đã đang đặt */
+  background-color: rgb(27, 233, 37) !important;
+}
+
+.gheVip{ /*ghế Vip */
+  background-color: rgb(233, 182, 27) !important;
+}
+.gheUserDat{
+  background-color: rgb(246, 246, 246);
+  -webkit-box-shadow: -1px 2px 18px -6px #000000;
+  box-shadow:-1px 2px 18px -6px #000000 ;
+  color: orange !important;
+  border: 1px solid #000000;
+}
+.gheVipDaDat{
+  background-color: rgb(255, 98, 0) !important;
+  -webkit-box-shadow: -1px 2px 18px -6px #000000;
+  box-shadow:-1px 2px 18px -6px #000000 ;
+  color: white !important;
+  font-weight: bold;
+  border: 1px solid #000000;
+}
+.gheNote{
+  width: 30px;
+  height: 30px;
+  margin-top: 5px;
+}
+

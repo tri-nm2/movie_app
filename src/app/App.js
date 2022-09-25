@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React, { Suspense } from "react";
 import MovieHeader from "common/components/MovieHeader";
 import MovieFooter from "common/components/MovieFooter";
+import InformationUser from "features/authentication/pages/InformationUser/InformationUser";
 
 
 
@@ -17,7 +18,7 @@ function App() {
     <Router>
       <div>
         <MovieHeader />
-        <Suspense fallback={<div>Loading....</div>}>
+        <Suspense>
           <Switch>
             <Route exact path="/">
               <Home />
@@ -28,7 +29,7 @@ function App() {
             </Route>
 
             <Route exact path="/Checkout/:movieId">
-              <Checkout />
+              <Checkout/>
             </Route>
 
             <Route exact path="/Signin">
@@ -37,6 +38,9 @@ function App() {
 
             <Route exact path="/Signup">
               <Signup />
+            </Route>
+            <Route exact path="/Thongtintaikhoan">
+              <InformationUser />
             </Route>
           </Switch>
         </Suspense>

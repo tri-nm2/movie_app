@@ -1,0 +1,7 @@
+.modalAlertMain{
+    z-index: 9999;
+    position: fixed;
+    inset: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}

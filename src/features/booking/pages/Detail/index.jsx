@@ -182,7 +182,7 @@ function Detail() {
     }
   };
   const handleScheduleClick = (maLichChieu) => {
-    console.log(maLichChieu);
+    // console.log(maLichChieu);
     const path = `/Checkout/${maLichChieu}`;
     history.push(path);
   }
