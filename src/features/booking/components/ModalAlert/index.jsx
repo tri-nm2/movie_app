@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { LayThongTinNguoiDungAction } from "redux/actions/QuanLyNguoiDungAction";
 import { HIDE_MODAL_ALERT, SHOW_MODAL } from "redux/actions/types/LoadingType";
+import { DELETE_THONG_TIN_DANG_KY } from "redux/actions/types/QuanLyNguoiDungType";
 import { CHUYEN_TAB, DELETE_GHE } from "redux/actions/types/QuanLyPhongVeType";
 import style from "./style.module.css";
 
@@ -39,13 +40,26 @@ function ModalAlert(props) {
                   });
                   if (!_.isEmpty(userLogin)) {
                     history.goBack();
+                  }else{
+                    // history.push("/");
+                    console.log("LOGIN");
                   }
                 } else if (props.page === "User") {
                   dispatch({
                     type: HIDE_MODAL_ALERT,
                     thongbao: "",
                   });
-                } else {
+               
+                } else if (props.page === "SignUp"){
+                    dispatch({
+                      type:DELETE_THONG_TIN_DANG_KY,
+                    });
+                    dispatch({
+                      type: HIDE_MODAL_ALERT,
+                      thongbao: "",
+                    });
+                    console.log("SIGNUP");
+                }else {
                   if (danhSachGheDaDat.length != 0) {
                     dispatch({
                       type: HIDE_MODAL_ALERT,

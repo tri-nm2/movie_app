@@ -15,5 +15,8 @@ export class QuanLyNguoiDungService extends baseServices{
     updateInfoUser = (ThongTinNguoiDung) => {
         return this.put("/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung",ThongTinNguoiDung);
     }
+    dangKy = (ThongTinDangKy) => {
+        return this.post("api/QuanLyNguoiDung/DangKy",ThongTinDangKy);
+    }
 }
 export const QLNguoiDungService = new QuanLyNguoiDungService();

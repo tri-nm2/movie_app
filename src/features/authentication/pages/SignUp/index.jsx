@@ -1,8 +1,55 @@
-import React from 'react';
+import ModalAlert from 'features/booking/components/ModalAlert';
+import { useFormik } from 'formik';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useHistory } from "react-router-dom";
+import { DangKyAction } from 'redux/actions/QuanLyNguoiDungAction';
+import * as Yup from 'yup';
+
 function Signup(props) {
+    const {ThongTinDangKy} = useSelector(state => state.QuanLyNguoiDungReducer);
+    const dispatch = useDispatch();
+    const history = useHistory();
+    const formik = useFormik({
+        initialValues: {
+            taiKhoan: "",
+            matKhau: "",
+            email: "",
+            soDt: "",
+            maNhom: "GP00",
+            hoTen: ""
+        },
+        validationSchema: Yup.object().shape({
+            taiKhoan: Yup.string().required("*Không được để trống tài khoản!"),
+            matKhau: Yup.string().required("*Không được để trống mật khẩu!"),
+            email: Yup.string().email("*Phải nhập đúng định dạng email abc@gmail.com").required("*Không được để trống email!"),
+            soDt: Yup.string().required("*Không được để trống số điện thoại!"),
+            hoTen: Yup.string().required("*Không được để trống họ tên!"),
+        })
+        ,
+        onSubmit: values => {
+            const dangKyForm = DangKyAction(values);
+            dispatch(dangKyForm);
+          
+        }
+    });
+    useEffect(() =>{
+        if( ThongTinDangKy.statusSignUp){
+            formik.resetForm({
+                taiKhoan: "",
+                matKhau: "",
+                email: "",
+                soDt: "",
+                maNhom: "GP00",
+                hoTen: ""
+            });
+          
+        }
+    },[ThongTinDangKy.statusSignUp])
+
     return (
         <div className="h-full flex py-5">
+                 <ModalAlert page="SignUp"/>
                 <div className="hidden lg:flex w-full lg:w-1/2 signup_img_section
               justify-around items-center">
                     <div className=" 
@@ -21,20 +68,26 @@ function Signup(props) {
                 </div>
                 <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
                     <div className="w-full px-8 md:px-32 lg:px-24">
-                        <form className="bg-white rounded-md shadow-2xl p-5">
+                        <form className="bg-white rounded-md shadow-2xl p-5" onSubmit={(e) => {
+                            e.preventDefault();
+                            formik.handleSubmit();
+                            
+                        }}>
                             <h1 className="text-gray-800 font-bold text-2xl mb-1 text-center mb-8">Đăng ký tài khoản</h1>
                             <div className="mb-4 md:flex md:justify-center">
                                 <div className="mb-4 md:mr-2 md:mb-0">
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="taiKhoan">
                                         Tài khoản
                                     </label>
-                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="taiKhoan" type="text" placeholder="Nhập tài khoản" />
+                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="taiKhoan" type="text" placeholder="Nhập tài khoản" onChange={formik.handleChange} value={formik.values.taiKhoan}/>
+                                    {formik.errors.taiKhoan && formik.touched.taiKhoan && (<span className="text-xs italic text-red-500">{formik.errors.taiKhoan}</span>)}
                                 </div>
                                 <div className="md:ml-2">
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="hoTen">
                                         Họ tên
                                     </label>
-                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="hoTen" type="text" placeholder="Nhập họ tên" />
+                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="hoTen" type="text" placeholder="Nhập họ tên"  onChange={formik.handleChange} value={formik.values.hoTen}/>
+                                    {formik.errors.hoTen && formik.touched.hoTen && (<span className="text-xs italic text-red-500">{formik.errors.hoTen}</span>)}
                                 </div>
                             </div>
                             <div className="mb-4 md:flex md:justify-center">
@@ -42,13 +95,15 @@ function Signup(props) {
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="soDt">
                                         Số điện thoại
                                     </label>
-                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="soDt" type="text" placeholder="Nhập số điện thoại" />
+                                    <input className="w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="soDt" type="text" placeholder="Nhập số điện thoại"  onChange={formik.handleChange} value={formik.values.soDt}/>
+                                    {formik.errors.soDt && formik.touched.soDt && (<span className="text-xs italic text-red-500">{formik.errors.soDt}</span>)}
                                 </div>
                                 <div className="md:ml-2">
                                 <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="email">
                                     Email
                                 </label>
-                                <input className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="Email" />
+                                <input className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="Email" onChange={formik.handleChange} value={formik.values.email}/>
+                                {formik.errors.email && formik.touched.email && (<span className="text-xs italic text-red-500">{formik.errors.email}</span>)}
                                 </div>
                             </div>
                             <div className="mb-4 md:flex md:justify-center">
@@ -56,18 +111,19 @@ function Signup(props) {
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="password">
                                         Password
                                     </label>
-                                    <input className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" />
+                                    <input className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="matKhau" type="password" placeholder="******************"  onChange={formik.handleChange} value={formik.values.matKhau}/>
                                     {/* <p className="text-xs italic text-red-500">Please choose a password.</p> */}
+                                    {formik.errors.matKhau && formik.touched.matKhau && (<span className="text-xs italic text-red-500">{formik.errors.matKhau}</span>)}
                                 </div>
-                                <div className="md:ml-2">
+                                {/* <div className="md:ml-2">
                                     <label className="block mb-2 text-sm font-bold text-gray-700" htmlFor="c_password">
                                         Confirm Password
                                     </label>
                                     <input className="w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline" id="c_password" type="password" placeholder="******************" />
-                                </div>
+                                </div> */}
                             </div>
                             <div className="mb-6 text-center">
-                                <button className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline" type="button">
+                                <button className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:shadow-outline" type="submit">
                                     Đăng ký
                                 </button>
                             </div>

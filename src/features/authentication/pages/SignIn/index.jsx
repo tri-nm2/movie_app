@@ -11,6 +11,7 @@ import { LoadingHideAction } from "redux/actions/LoadingAction";
 
 
 function Signin(props) {
+  const {ThongTinDangKy, userLogin} = useSelector(state => state.QuanLyNguoiDungReducer);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -23,8 +24,6 @@ function Signin(props) {
     onSubmit: values => {
       const action = DangNhapAction(values);
       dispatch(action);
-     
-      // history.goBack();
     },
   });
   useEffect(() => {

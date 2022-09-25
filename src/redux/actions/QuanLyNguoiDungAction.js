@@ -1,8 +1,10 @@
 import { USER_LOGIN } from "common/contants/myContant";
+import { ThongTinDangKy } from "core/model/ThongTinDangKy";
 import { QLNguoiDungService } from "services/QuanLyNguoiDungService";
 import { LoadingHideAction, LoadingShowAction } from "./LoadingAction";
 import { HIDE_MODAL_ALERT, SHOW_MODAL, SHOW_MODAL_ALERT } from "./types/LoadingType";
 import {
+  SET_THONG_TIN_DANG_KY,
   SET_THONG_TIN_NGUOI_DUNG,
   SET_USER,
 } from "./types/QuanLyNguoiDungType";
@@ -24,6 +26,7 @@ export const DangNhapAction = (ThongTinDangNhap) => {
         type: SHOW_MODAL_ALERT,
         thongbao: "Đăng nhập thành công!",
       });
+ 
     } catch (errs) {
       console.log("errors", errs.response.data.content);
       await dispatch(LoadingHideAction());
@@ -74,6 +77,51 @@ export const CapNhatThongTinAction = (ThongTinNguoiDung,ThongTinUserLogin) => {
         type: SHOW_MODAL_ALERT,
         thongbao: `Cập nhật thất bại! ${errs.response.data.content}`,
       });
+    }
+  };
+};
+export const DangKyAction = (ThongTin) => {
+  return async (dispatch) => {
+    try {
+      await dispatch(LoadingShowAction());
+      const response = await QLNguoiDungService.dangKy(ThongTin);
+      await dispatch(LoadingHideAction());
+      await dispatch({
+        type: SHOW_MODAL_ALERT,
+        thongbao: "Đăng ký thành công!",
+      });
+      let ttDangKy = new ThongTinDangKy(
+        ThongTin.taiKhoan,
+        ThongTin.matKhau,
+        ThongTin.email,
+        ThongTin.soDt,
+        ThongTin.hoTen,
+        true,
+      );
+      await dispatch({
+        type: SET_THONG_TIN_DANG_KY,
+        ThongTinDangKy: ttDangKy    
+      })
+    } catch (errs) {
+      let ttDangKyTB = new ThongTinDangKy(
+        ThongTin.taiKhoan,
+        ThongTin.matKhau,
+        ThongTin.email,
+        ThongTin.soDt,
+        ThongTin.hoTen,
+        false,
+      );
+      await dispatch({
+        type: SET_THONG_TIN_DANG_KY,
+        ThongTinDangKy: ttDangKyTB    
+      })
+      console.log("errors", errs.response.data.content);
+      await dispatch(LoadingHideAction());
+      await dispatch({
+        type: SHOW_MODAL_ALERT,
+        thongbao: `Đăng ký thất bại! ${errs.response.data.content}`,
+      });
+   
     }
   };
 };
