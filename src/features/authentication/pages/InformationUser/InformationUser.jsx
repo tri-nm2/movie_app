@@ -15,6 +15,7 @@ import { ClockCircleOutlined, SketchOutlined } from "@ant-design/icons";
 
 function InformationUser(props) {
   const { ThongTinNguoiDung, userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
+  const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const windowSize = useWindowSize();
@@ -72,14 +73,13 @@ function InformationUser(props) {
       hoTen: ThongTinNguoiDung.hoTen,
     },
     onSubmit: (values) => {
-      console.log(values);
       dispatch(CapNhatThongTinAction(values, userLogin));
     },
   });
   useEffect(() => {
-    if(_.isEmpty(userLogin)){
+    if (_.isEmpty(userLogin)) {
       history.push("/Signin");
-    }else{
+    } else {
       const action = LayThongTinNguoiDungAction();
       dispatch(action);
     }
@@ -98,6 +98,29 @@ function InformationUser(props) {
     };
   });
 
+  //Render 5 ghe dau tien trong danh sach co nhieu ghe
+  function renderMobileSeat(item) {
+    // console.log(item)
+    const dsGhe = _.slice(item.danhSachGhe, 0, 3);
+    return dsGhe.map((ghe, index) => {
+      if (item.loaiGhe === "Vip") {
+        return (
+          <div key={index} className="w-9 h-9 text-center relative text-md font-bold font-medium uppercase text-yellow-800 bg-yellow-200	 rounded shadow">
+            <span className="inline-block translate-y-1	">{ghe.tenGhe}</span>
+            <span className="w-2 h-2 inline-block absolute right-1" style={{ top: "-5px" }}>
+              <SketchOutlined className="absolute" style={{ fontSize: 12 }} />
+            </span>
+          </div>
+        );
+      } else {
+        return (
+          <div key={index} className="w-9 text-center  text-md font-bold font-medium uppercase text-sky-800 bg-sky-200 rounded shadow">
+            <span className="inline-block translate-y-1	">{ghe.tenGhe}</span>
+          </div>
+        );
+      }
+    });
+  }
   //Render mobile Lịch sử đặt vé
   function renderMobileLichSuDatVe() {
     return ThongTinNguoiDung.thongTinDatVe.map((item, index) => {
@@ -105,10 +128,10 @@ function InformationUser(props) {
       return (
         <div key={index} className="bg-orange-100	 p-4 rounded-lg shadow my-3 overflow-scroll	w-full">
           <div className="flex items-center">
-            <div className="w-20 pr-2">
+            <div className=" pr-2 w-1/4">
               <img className="w-16 h-16 rounded-full shadow" src={item.hinhAnh} alt={"hinhAnh"} />
             </div>
-            <div>
+            <div className="w-3/4">
               <div className="flex items-center space-x-2 text-sm">
                 <div className="p-1.5 text-xs font-medium uppercase tracking-wider text-fuchsia-800	 bg-fuchsia-200 rounded-lg bg-opacity-50 font-bold">Mã vé: {item.maVe}</div>
                 <div className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
@@ -136,24 +159,14 @@ function InformationUser(props) {
                   <span className="text-red-500 font-bold text-md">Danh sách ghế:</span>
                 </div>
                 <div className="flex w-full bg-white-200 space-x-2 ">
-                  {item.danhSachGhe.map((seats, index) => {
-                    if (seats.loaiGhe === "Vip") {
-                      return (
-                        <div key={index} className="w-9 h-9 text-center relative text-md font-bold font-medium uppercase text-yellow-800 bg-yellow-200	 rounded shadow">
-                          <span className="inline-block translate-y-1	">{seats.tenGhe}</span>
-                          <span className="w-2 h-2 inline-block absolute right-1" style={{ top: "-5px" }}>
-                            <SketchOutlined className="absolute" style={{ fontSize: 12 }} />
-                          </span>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div key={index} className="w-9 text-center  text-md font-bold font-medium uppercase text-sky-800 bg-sky-200 rounded shadow">
-                          <span className="inline-block translate-y-1	">{seats.tenGhe}</span>
-                        </div>
-                      );
-                    }
-                  })}
+                  {renderMobileSeat(item)}
+                  {item.danhSachGhe.length > 3 ? (
+                    <Button className="bg-green-400" onClick={() => {}}>
+                      Còn tiếp...
+                    </Button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
@@ -164,8 +177,9 @@ function InformationUser(props) {
   }
   return (
     <div className={`${windowSize.width > mobileBreakPoint ? "flex" : "flex-col"}`}>
-      <ModalAlert page="User"/>
-      <Loading/>
+      <ModalAlert page="User" />
+      <Loading />
+
       <div className={`${windowSize.width > mobileBreakPoint ? "w-1/4 flex" : "flex justify-center items-center"}`}>
         <Card
           style={{
@@ -202,10 +216,6 @@ function InformationUser(props) {
                   <label className="text-base font-bold">Mật Khẩu</label>
                   <Input value={formik.values.matKhau} onChange={formik.handleChange} name="matKhau" type="password" />
                 </div>
-                {/* <div className="mt-4">
-                  <label>Mật khẩu</label>
-                  <Input value= type="password" />
-                </div> */}
                 <div className="mt-4">
                   <label className="text-base font-bold">Họ tên</label>
                   <Input id="hoTen" name="hoTen" onChange={formik.handleChange} value={formik.values.hoTen} />
@@ -228,7 +238,7 @@ function InformationUser(props) {
             <div className="md:block hidden">
               <Table columns={columns} dataSource={dataThongtinnguoidung} scroll={{ y: 300, x: 500 }} />
             </div>
-            <div className="md:hidden grid grid-cols-1 grap-4">{renderMobileLichSuDatVe()}</div>
+            <div className="md:hidden ">{renderMobileLichSuDatVe()}</div>
           </Tabs.TabPane>
         </Tabs>
       </div>
