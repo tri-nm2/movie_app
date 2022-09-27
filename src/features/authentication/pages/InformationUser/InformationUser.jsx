@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Input, Button, Table, Space, Tag, Card } from "antd";
+import { Tabs, Input, Button, Table, Space, Tag, Card, Anchor } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { CapNhatThongTinAction, LayThongTinNguoiDungAction } from "redux/actions/QuanLyNguoiDungAction";
 import Loading from "common/components/Loading";
@@ -16,6 +16,7 @@ import { ClockCircleOutlined, SketchOutlined } from "@ant-design/icons";
 function InformationUser(props) {
   const { ThongTinNguoiDung, userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
   const [modal, setModal] = useState(false);
+  const [listSeats, setlistSeats] = useState([]);
   const dispatch = useDispatch();
   const history = useHistory();
   const windowSize = useWindowSize();
@@ -48,19 +49,36 @@ function InformationUser(props) {
     {
       title: "Danh sách ghế",
       dataIndex: "danhSachGhe",
-      render: (_, { danhSachGhe }) => (
-        <>
-          {danhSachGhe.map((item, index) => {
-            return (
-              <Tag color={"green"} key={index}>
-                {item.tenGhe.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      render: (_, { danhSachGhe }) => {
+       
+        return <>
+            {danhSachGhe.length > 3 ? (
+              <>
+              {renderMobileSeatTable(danhSachGhe)}
+              <Button type="link"  onClick={() => {
+                  setModal(!modal);
+                  setlistSeats(danhSachGhe);
+              }}>
+                 Còn nữa...
+              </Button>
+              </>
+            ) : (
+              danhSachGhe.map((item, index) => {
+                return (
+                  <Tag color={"green"} key={index}>
+                    {item.tenGhe.toUpperCase()}
+                  </Tag>
+                );
+              })
+            )}
+          </>
+      }
     },
   ];
+  function closeModal(){
+    setModal(!modal);
+    setlistSeats([]);
+  }
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -76,14 +94,16 @@ function InformationUser(props) {
       dispatch(CapNhatThongTinAction(values, userLogin));
     },
   });
+  console.log("Infor render");
+  console.log("listSEat", listSeats);
   useEffect(() => {
-    if (_.isEmpty(userLogin)) {
-      history.push("/Signin");
-    } else {
-      const action = LayThongTinNguoiDungAction();
-      dispatch(action);
-    }
-  }, []);
+    // if (_.isEmpty(userLogin)) {
+    //   history.push("/Signin");
+    // } else {
+    //   const action = LayThongTinNguoiDungAction();
+    //   dispatch(action);
+    // }
+  }, []); 
   const dataThongtinnguoidung = ThongTinNguoiDung.thongTinDatVe.map((item, index) => {
     const seats = _.first(item.danhSachGhe);
     return {
@@ -119,6 +139,18 @@ function InformationUser(props) {
           </div>
         );
       }
+    });
+  }
+  //Render 5 ghe dau tien trong danh sach co nhieu ghe
+  function renderMobileSeatTable(item) {
+    // console.log(item)
+    const dsGhe = _.slice(item, 0, 3);
+    return dsGhe.map((ghe, index) => {
+        return (
+          <Tag color={"green"} key={index}>
+          {ghe.tenGhe.toUpperCase()}
+          </Tag>
+        );
     });
   }
   //Render mobile Lịch sử đặt vé
@@ -161,8 +193,11 @@ function InformationUser(props) {
                 <div className="flex w-full bg-white-200 space-x-2 ">
                   {renderMobileSeat(item)}
                   {item.danhSachGhe.length > 3 ? (
-                    <Button className="bg-green-400" onClick={() => {}}>
-                      Còn tiếp...
+                    <Button className="bg-green-400" onClick={() => {
+                      setModal(!modal);
+                      setlistSeats(item.danhSachGhe);
+                    }}>
+                      Xem tiếp...
                     </Button>
                   ) : (
                     ""
@@ -177,9 +212,9 @@ function InformationUser(props) {
   }
   return (
     <div className={`${windowSize.width > mobileBreakPoint ? "flex" : "flex-col"}`}>
-      <ModalAlert page="User" />
-      <Loading />
-
+      {/* <ModalAlert page="User" />
+      <Loading /> */}
+      {modal ? <ModalDanhSachGhe danhSachGhe={listSeats} closeModal={closeModal}/> : ""}
       <div className={`${windowSize.width > mobileBreakPoint ? "w-1/4 flex" : "flex justify-center items-center"}`}>
         <Card
           style={{
@@ -244,6 +279,71 @@ function InformationUser(props) {
       </div>
     </div>
   );
+}
+function ModalDanhSachGhe({danhSachGhe, closeModal}){
+  let soLuongGheDaTa = danhSachGhe.length;
+  let soLuongGheDefaut = 10;
+  let soLuongDong = 0;
+  let soGhe = [];
+  let widthGhe = "30";
+  if(danhSachGhe.length <= 10){
+    soLuongDong = 1;
+    soGhe = danhSachGhe;
+  }else{
+    soLuongDong = Math.round(soLuongGheDaTa /10 +1);
+    soGhe = _.chunk(danhSachGhe, 10);
+  }
+  console.log("sl ghe tu danh sach",soLuongGheDaTa);
+  console.log("sl dong",soLuongDong);
+  console.log("sl ghe tu mang chunk",soGhe);
+  function renderListGhe() {
+    if(soLuongDong === 1){
+      return <div  className="flex items-center p-1  ">
+        {soGhe.map( (seats,key) =>{
+         return <div key={key} style={{ width: `150px`, height: `35px`}} className="text-center p-1 relative  ">
+           <span className=" inline-block w-full h-full text-md font-bold font-medium uppercase text-blue-800 bg-blue-200 rounded shadow">{seats.tenGhe}</span>
+          </div>})}
+      </div>
+    }else{
+      return soGhe.map((item,index) =>{
+          return <div key={index} className="flex items-center p-1  ">
+              {item.map((seats,key) => {
+                 return <div key={key} style={{ width: `20%`, height: `35px`}} className="text-center relative m-1">
+                   <div className="flex items-center justify-center p-1">
+                   <span className=" inline-block w-full h-full text-md font-bold font-medium uppercase text-blue-800 bg-blue-200 rounded shadow">{seats.tenGhe}</span>
+                   </div>
+                  </div>
+              })}
+          </div>
+      })
+    }
+    
+  //  return soDong.map( (item, index) => {
+  //   return <div key={index} className="flex items-center p-1 justify-between ">
+  //     { danhSachGhe.map( (seats, key ) =>{
+  //       return <div key={key} style={{ width: `${widthGhe}%`, height: `${widthGhe}%`}} className="text-center p-1 relative  ">
+  //       <span className=" inline-block w-full h-full text-md font-bold font-medium uppercase text-blue-800 bg-blue-200 rounded shadow">{seats.tenGhe}</span>
+  //     </div>
+  //     })}
+  // </div>
+  //  })
+  
+  }
+  return <div className="fixed top-0 left-0 w-full h-full z-50 flex justify-center items-center">
+     
+      <div className="w-1/2 p-5 flex-col justify-center items-center bg-white shadow rounded-lg">
+      <div>
+        <h3 className="text-center font-bold text-xl">Tổng số ghế bạn đặt: <span className="text-red-600"> {danhSachGhe.length}</span></h3>
+      </div>
+      <div className="bg-red-400 w-full h-full rounded-lg overflow-scroll">
+        {renderListGhe()}
+      </div> 
+      <div className="text-center p-1.5">
+      <Button className="bg-blue-600" onClick={closeModal}>Đóng</Button> 
+      </div>
+      </div> 
+      
+  </div>
 }
 
 export default InformationUser;
