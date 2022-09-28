@@ -97,12 +97,12 @@ function InformationUser(props) {
   console.log("Infor render");
   console.log("listSEat", listSeats);
   useEffect(() => {
-    // if (_.isEmpty(userLogin)) {
-    //   history.push("/Signin");
-    // } else {
-    //   const action = LayThongTinNguoiDungAction();
-    //   dispatch(action);
-    // }
+    if (_.isEmpty(userLogin)) {
+      history.push("/Signin");
+    } else {
+      const action = LayThongTinNguoiDungAction();
+      dispatch(action);
+    }
   }, []); 
   const dataThongtinnguoidung = ThongTinNguoiDung.thongTinDatVe.map((item, index) => {
     const seats = _.first(item.danhSachGhe);
@@ -212,8 +212,8 @@ function InformationUser(props) {
   }
   return (
     <div className={`${windowSize.width > mobileBreakPoint ? "flex" : "flex-col"}`}>
-      {/* <ModalAlert page="User" />
-      <Loading /> */}
+      <ModalAlert page="User" />
+      <Loading />
       {modal ? <ModalDanhSachGhe danhSachGhe={listSeats} closeModal={closeModal}/> : ""}
       <div className={`${windowSize.width > mobileBreakPoint ? "w-1/4 flex" : "flex justify-center items-center"}`}>
         <Card
